@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Bot configuration
-DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+DISCORD_TOKEN = "MTM4MDI2NTI4MjExNDk0OTE3MA.GrQf-R.0TQzJQBmQVaoUgpxeO6th9cTuBGAT2vgguH_Rk"  # Replace with your actual Discord bot token
 CHANNEL_ID = int(os.getenv('CHANNEL_ID', 1379286990477983795))
 ADMIN_IDS = [550322941250895882, 311036928910950401]  # Replace with your Discord user IDs
 
