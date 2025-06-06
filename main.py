@@ -22,8 +22,8 @@ DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL_ID = int(os.getenv('CHANNEL_ID', 1379286990477983795))
 ADMIN_IDS = [550322941250895882, 311036928910950401]  # Replace with your Discord user IDs
 
-# Render.com configuration
-PORT = int(os.environ.get('PORT', 10000))
+# Port configuration - use 5000 as recommended for Replit
+PORT = int(os.environ.get('PORT', 5000))
 
 # Status emojis and their corresponding text
 STATUS_EMOJIS = {
@@ -433,15 +433,50 @@ async def main():
     await create_web_server()
     logger.info("Web server started successfully")
     
-    # Start the Discord bot
+    # Debug token information
     if not DISCORD_TOKEN:
         logger.error("DISCORD_TOKEN not found in environment variables")
+        logger.error("Please set your Discord bot token in the .env file")
+        logger.error("Get a token from: https://discord.com/developers/applications")
+        # Keep web server running even without Discord token
+        try:
+            await asyncio.Future()  # Run forever
+        except KeyboardInterrupt:
+            logger.info("Service stopped")
         return
     
+    # Validate token format
+    token_parts = DISCORD_TOKEN.strip().split('.')
+    if len(token_parts) != 3:
+        logger.error("Invalid Discord token format. Token should have 3 parts separated by dots")
+        logger.error("Please get a new token from: https://discord.com/developers/applications")
+        # Keep web server running with invalid token
+        try:
+            await asyncio.Future()  # Run forever
+        except KeyboardInterrupt:
+            logger.info("Service stopped")
+        return
+    else:
+        logger.info("Discord token format appears valid")
+    
     try:
-        await bot.start(DISCORD_TOKEN)
+        await bot.start(DISCORD_TOKEN.strip())
+    except nextcord.errors.LoginFailure:
+        logger.error("Discord token is invalid or expired")
+        logger.error("Please get a new token from: https://discord.com/developers/applications")
+        logger.error("Then update your .env file with the new DISCORD_TOKEN")
+        # Keep web server running even if Discord connection fails
+        try:
+            await asyncio.Future()  # Run forever
+        except KeyboardInterrupt:
+            logger.info("Service stopped")
     except Exception as e:
         logger.error(f"Failed to start bot: {e}")
+        # Keep web server running even if Discord connection fails
+        try:
+            await asyncio.Future()  # Run forever
+        except KeyboardInterrupt:
+            logger.info("Service stopped")
 
 if __name__ == "__main__":
     asyncio.run(main())
