@@ -23,7 +23,7 @@ CHANNEL_ID = int(os.getenv('CHANNEL_ID', 1379286990477983795))
 ADMIN_IDS = [550322941250895882, 311036928910950401]  # Replace with your Discord user IDs
 
 # Render.com configuration
-PORT = int(os.environ.get('PORT', 8000))
+PORT = int(os.environ.get('PORT', 10000))
 
 # Status emojis and their corresponding text
 STATUS_EMOJIS = {
